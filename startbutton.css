@@ -1,0 +1,81 @@
+@font-face {
+    font-family: 'Revamped';
+    src: url('Revamped-X3q1a.ttf');
+}
+.glow-on-hover {
+    color: rgb(39, 187, 113);
+    background: rgba(15, 15, 15, 0.8);
+    cursor: none;
+    /* cursor: url(select.cur), url(select.cur), auto; */
+    display: flex;
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    width: 300px;
+    font-size: 40px;
+    font-family: Revamped;
+    border-radius: 50%;
+    border: 3px solid rgb(0, 156, 34);
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -150px;
+    box-shadow: 0 0 60px rgba(0, 80, 7, 0.7);
+}
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+.glow-on-hover:hover:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    border-radius: 50%;
+    transition: opacity .3s ease-in-out;
+}
+
+/* Remove our mask to reveal the whole circle */
+
+.glow-on-hover:active:after {
+    background: transparent;
+}
+.glow-on-hover:hover {
+    transition: 1s ease-in-out;
+    transform: translateY(-3px);
+    box-shadow: 0 100px 200px rgba(0, 0, 0, 0.5);
+}
+
+/* A mask to remove the center of the glowing circle so we only have glowing borders. */
+
+.glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+}
+@keyframes glowing {
+    0% {
+        background-position: 0 0;
+    }
+    50% {
+        background-position: 400% 0;
+    }
+    100% {
+        background-position: 0 0;
+    }
+}

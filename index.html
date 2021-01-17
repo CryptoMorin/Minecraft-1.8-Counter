@@ -1,1 +1,38 @@
-<h1>Hello World!</h1>
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>1.8.8 Age Counter</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Minecraft, 1.8, Counter, Spigot, Bukkit, MC">
+    <meta name="author" content="Crypto Morin">
+    <meta name="description" content="The fate of v1.8.8">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" type="text/css" href="clock.css">
+    <link rel="stylesheet" type="text/css" href="startbutton.css">
+    <link rel="stylesheet" type="text/css" href="glitch.css">
+    <link rel="icon" href="favicon.png" type="image/png">
+</head>
+
+<body>
+    <canvas id='canvas'></canvas>
+    <button class="glow-on-hover" id="start" type="button" data-text="Start" onclick="start()">
+        <div class="glitch" data-text="Start">Start</div>
+        <div class="glow">Start</div>
+    </button>
+    <div id='contextMenu' class="glitch">
+        <p>Crypto Morin</p>
+        <hr>
+        <p>v1.0.0</p>
+    </div>
+    <!-- <button id="audio" onclick="onAudioButton()"></button> -->
+
+    <script src="audiomanager.js"></script>
+    <script src="utils.js"></script>
+    <script src="canvas.js"></script>
+    <script src="mouse.js"></script>
+    <script src="nano.js"></script>
+    <script src="start.js"></script>
+</body>
+
+</html>

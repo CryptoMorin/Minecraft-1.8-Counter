@@ -1,0 +1,86 @@
+* {
+    cursor: url(cursor.cur), url(cursor.cur), auto;
+    margin: 0;
+    padding: 0;
+}
+@font-face {
+    font-family: 'MGE';
+    src: url('MinecraftGalacticEnchantment.ttf');
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    background: radial-gradient(rgb(40, 45, 112), #000000);
+    position: absolute;
+    min-width: 900px;
+}
+canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+div.clickEffect {
+    position: fixed;
+    box-sizing: border-box;
+    border-style: solid;
+    border-color: #00fc71;
+    border-radius: 50%;
+    animation: clickEffect 0.7s ease-out;
+    z-index: 99999;
+}
+#contextMenu {
+    display: none;
+    background-color: rgb(19, 19, 19);
+    position: relative;
+    height: 60px;
+    width: 170px;
+    text-align: center;
+    font-size: 17px;
+    font-family: Revamped;
+    color: rgb(0, 214, 96);
+    border: 2px solid green;
+    overflow: hidden;
+    box-shadow: 12px 12px 2px 1px rgba(0, 0, 0, 0.5);
+}
+#contextMenu p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+#contextMenu hr {
+    height: 2px;
+    width: 170px;
+    stroke: green;
+    border: 0;
+    background-color: green;
+}
+@keyframes rightClickEffect {
+    0% {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    100% {
+        opacity: 1;
+        height: 60px;
+        width: 170px;
+    }
+}
+@keyframes clickEffect {
+    0% {
+        opacity: 1;
+        width: 0.5em;
+        height: 0.5em;
+        margin: -0.25em;
+        border-width: 0.5em;
+    }
+    100% {
+        opacity: 0;
+        width: 15em;
+        height: 15em;
+        margin: -7.5em;
+        border-width: 0.03em;
+    }
+}
