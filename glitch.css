@@ -1,0 +1,360 @@
+.glitch, .glow {
+  cursor: none;
+  display: block;
+  position: absolute;
+  animation: glitch 5s 5s infinite;
+  overflow: hidden;
+}
+
+.glitch::before, .glow::before {
+  content: attr(data-text);
+  position: absolute;
+  left: -2px;
+  text-shadow: 9px 0 #094e24;
+  animation: noise-1 3s linear infinite alternate-reverse, glitch 5s 5.05s infinite;
+}
+
+.glitch::after, .glow::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  text-shadow: -3px 0 #570000;
+  animation: noise-2 3s linear infinite alternate-reverse, glitch 5s 5s infinite;
+}
+
+@keyframes glitch {
+  1% {
+    transform: rotateX(10deg) skewX(90deg);
+  }
+  2% {
+    transform: rotateX(0deg) skewX(0deg);
+  }
+}
+@keyframes noise-1 {
+  2% {
+    clip-path: inset(8px 0 92px 0);
+  }
+  4% {
+    clip-path: inset(31px 0 1px 0);
+  }
+  6% {
+    clip-path: inset(13px 0 80px 0);
+  }
+  8% {
+    clip-path: inset(31px 0 45px 0);
+  }
+  10% {
+    clip-path: inset(28px 0 9px 0);
+  }
+  12% {
+    clip-path: inset(26px 0 18px 0);
+  }
+  14% {
+    clip-path: inset(6px 0 39px 0);
+  }
+  16% {
+    clip-path: inset(60px 0 32px 0);
+  }
+  18% {
+    clip-path: inset(84px 0 4px 0);
+  }
+  20% {
+    clip-path: inset(54px 0 29px 0);
+  }
+  22% {
+    clip-path: inset(55px 0 17px 0);
+  }
+  24% {
+    clip-path: inset(5px 0 30px 0);
+  }
+  26% {
+    clip-path: inset(30px 0 38px 0);
+  }
+  28% {
+    clip-path: inset(68px 0 8px 0);
+  }
+  30% {
+    clip-path: inset(18px 0 36px 0);
+  }
+  32% {
+    clip-path: inset(93px 0 3px 0);
+  }
+  34% {
+    clip-path: inset(36px 0 35px 0);
+  }
+  36% {
+    clip-path: inset(47px 0 23px 0);
+  }
+  38% {
+    clip-path: inset(80px 0 10px 0);
+  }
+  40% {
+    clip-path: inset(3px 0 53px 0);
+  }
+  42% {
+    clip-path: inset(53px 0 8px 0);
+  }
+  44% {
+    clip-path: inset(44px 0 5px 0);
+  }
+  46% {
+    clip-path: inset(98px 0 1px 0);
+  }
+  48% {
+    clip-path: inset(57px 0 41px 0);
+  }
+  50% {
+    clip-path: inset(91px 0 3px 0);
+  }
+  52% {
+    clip-path: inset(46px 0 36px 0);
+  }
+  54% {
+    clip-path: inset(100px 0 1px 0);
+  }
+  56% {
+    clip-path: inset(43px 0 38px 0);
+  }
+  58% {
+    clip-path: inset(46px 0 3px 0);
+  }
+  60% {
+    clip-path: inset(46px 0 7px 0);
+  }
+  62% {
+    clip-path: inset(32px 0 57px 0);
+  }
+  64% {
+    clip-path: inset(14px 0 26px 0);
+  }
+  66% {
+    clip-path: inset(98px 0 2px 0);
+  }
+  68% {
+    clip-path: inset(6px 0 21px 0);
+  }
+  70% {
+    clip-path: inset(71px 0 22px 0);
+  }
+  72% {
+    clip-path: inset(97px 0 3px 0);
+  }
+  74% {
+    clip-path: inset(49px 0 11px 0);
+  }
+  76% {
+    clip-path: inset(91px 0 2px 0);
+  }
+  78% {
+    clip-path: inset(20px 0 12px 0);
+  }
+  80% {
+    clip-path: inset(19px 0 12px 0);
+  }
+  82% {
+    clip-path: inset(94px 0 6px 0);
+  }
+  84% {
+    clip-path: inset(75px 0 17px 0);
+  }
+  86% {
+    clip-path: inset(76px 0 4px 0);
+  }
+  88% {
+    clip-path: inset(17px 0 69px 0);
+  }
+  90% {
+    clip-path: inset(84px 0 7px 0);
+  }
+  92% {
+    clip-path: inset(45px 0 35px 0);
+  }
+  94% {
+    clip-path: inset(26px 0 24px 0);
+  }
+  96% {
+    clip-path: inset(89px 0 11px 0);
+  }
+  98% {
+    clip-path: inset(44px 0 30px 0);
+  }
+  100% {
+    clip-path: inset(1px 0 98px 0);
+  }
+}
+@keyframes noise-2 {
+  0% {
+    clip-path: inset(37px 0 14px 0);
+  }
+  2% {
+    clip-path: inset(93px 0 4px 0);
+  }
+  4% {
+    clip-path: inset(79px 0 2px 0);
+  }
+  6% {
+    clip-path: inset(99px 0 2px 0);
+  }
+  8% {
+    clip-path: inset(72px 0 22px 0);
+  }
+  10% {
+    clip-path: inset(32px 0 29px 0);
+  }
+  12% {
+    clip-path: inset(82px 0 18px 0);
+  }
+  14% {
+    clip-path: inset(55px 0 42px 0);
+  }
+  16% {
+    clip-path: inset(28px 0 16px 0);
+  }
+  18% {
+    clip-path: inset(22px 0 56px 0);
+  }
+  20% {
+    clip-path: inset(34px 0 43px 0);
+  }
+  22% {
+    clip-path: inset(92px 0 9px 0);
+  }
+  24% {
+    clip-path: inset(72px 0 14px 0);
+  }
+  26% {
+    clip-path: inset(52px 0 4px 0);
+  }
+  28% {
+    clip-path: inset(14px 0 78px 0);
+  }
+  30% {
+    clip-path: inset(82px 0 16px 0);
+  }
+  32% {
+    clip-path: inset(15px 0 16px 0);
+  }
+  34% {
+    clip-path: inset(84px 0 3px 0);
+  }
+  36% {
+    clip-path: inset(92px 0 7px 0);
+  }
+  38% {
+    clip-path: inset(16px 0 6px 0);
+  }
+  40% {
+    clip-path: inset(77px 0 12px 0);
+  }
+  42% {
+    clip-path: inset(33px 0 1px 0);
+  }
+  44% {
+    clip-path: inset(49px 0 6px 0);
+  }
+  46% {
+    clip-path: inset(26px 0 41px 0);
+  }
+  48% {
+    clip-path: inset(48px 0 41px 0);
+  }
+  50% {
+    clip-path: inset(96px 0 4px 0);
+  }
+  52% {
+    clip-path: inset(24px 0 63px 0);
+  }
+  54% {
+    clip-path: inset(2px 0 68px 0);
+  }
+  56% {
+    clip-path: inset(53px 0 40px 0);
+  }
+  58% {
+    clip-path: inset(71px 0 26px 0);
+  }
+  60% {
+    clip-path: inset(14px 0 25px 0);
+  }
+  62% {
+    clip-path: inset(87px 0 13px 0);
+  }
+  64% {
+    clip-path: inset(33px 0 10px 0);
+  }
+  66% {
+    clip-path: inset(98px 0 2px 0);
+  }
+  68% {
+    clip-path: inset(5px 0 8px 0);
+  }
+  70% {
+    clip-path: inset(89px 0 10px 0);
+  }
+  72% {
+    clip-path: inset(85px 0 14px 0);
+  }
+  74% {
+    clip-path: inset(45px 0 43px 0);
+  }
+  76% {
+    clip-path: inset(76px 0 8px 0);
+  }
+  78% {
+    clip-path: inset(54px 0 19px 0);
+  }
+  80% {
+    clip-path: inset(46px 0 25px 0);
+  }
+  82% {
+    clip-path: inset(67px 0 6px 0);
+  }
+  84% {
+    clip-path: inset(47px 0 40px 0);
+  }
+  86% {
+    clip-path: inset(54px 0 4px 0);
+  }
+  88% {
+    clip-path: inset(46px 0 7px 0);
+  }
+  90% {
+    clip-path: inset(72px 0 1px 0);
+  }
+  92% {
+    clip-path: inset(18px 0 5px 0);
+  }
+  94% {
+    clip-path: inset(49px 0 49px 0);
+  }
+  96% {
+    clip-path: inset(12px 0 55px 0);
+  }
+  98% {
+    clip-path: inset(90px 0 6px 0);
+  }
+  100% {
+    clip-path: inset(6px 0 46px 0);
+  }
+}
+@keyframes fudge {
+  from {
+    transform: translate(0px, 0px);
+  }
+  to {
+    transform: translate(0px, 2%);
+  }
+}
+.glow {
+  text-shadow: 0 0 1000px red;
+  color: transparent;
+}
+
+@keyframes glitch-2 {
+  1% {
+    transform: rotateX(10deg) skewX(70deg);
+  }
+  2% {
+    transform: rotateX(0deg) skewX(0deg);
+  }
+}

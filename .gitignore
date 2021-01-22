@@ -16,5 +16,5 @@ ignore
 package-lock.json
 Unused
 
-glitch.css
+#glitch.css
 Start.bat

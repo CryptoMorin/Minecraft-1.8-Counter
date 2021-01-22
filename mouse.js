@@ -1,7 +1,7 @@
 /**
  * @type {MouseEvent}
  */
-let contextMenu = null;
+let contextMenu;
 const contextMenDiv = document.getElementById('contextMenu');
 document.addEventListener('contextmenu', function(e) {
     e.preventDefault();

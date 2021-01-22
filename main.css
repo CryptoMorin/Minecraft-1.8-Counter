@@ -1,5 +1,7 @@
 * {
     cursor: url(cursor.cur), url(cursor.cur), auto;
+    margin: 0;
+    padding: 0;
 }
 @font-face {
     font-family: 'MGE';
@@ -13,6 +15,7 @@ html, body {
 }
 canvas {
     display: block;
+    position: absolute;
 }
 div.clickEffect {
     position: fixed;
