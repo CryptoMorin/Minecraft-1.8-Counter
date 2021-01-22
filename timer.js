@@ -96,6 +96,7 @@ document.body.appendChild(clock);
 
 function generateSegments(currClass) {
     for (const curr of currClass) {
+        console.log
         for (let j = 0; j < 7; j++) {
             const segment = document.createElement('div');
             segment.className = "segment";
