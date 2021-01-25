@@ -1,10 +1,11 @@
 let audioStopped = false;
 
-const startAudio = new Audio('Genshin.mp3');
-const startButtonSound = new Audio('startclick.ogg');
-const startButtonAmbient = new Audio('start.ogg');
-const countDownSound = new Audio('countdown.mp3');
-const oFortuna = new Audio('OFortuna.mp3');
+const startPath = "resources/audios/";
+const startAudio = new Audio(startPath + 'Genshin.mp3');
+const startButtonSound = new Audio(startPath + 'startclick.ogg');
+const startButtonAmbient = new Audio(startPath + 'start.ogg');
+const countDownSound = new Audio(startPath + 'countdown.mp3');
+const oFortuna = new Audio(startPath + 'OFortuna.mp3');
 
 const audioButton = document.getElementById('audio');
 window.addEventListener('load', () => drawAudioButton);

@@ -5,7 +5,7 @@
 }
 @font-face {
     font-family: 'MGE';
-    src: url('MinecraftGalacticEnchantment.ttf');
+    src: url('../resources/fonts/MinecraftGalacticEnchantment.ttf');
 }
 html, body {
     width: 100%;

@@ -15,6 +15,7 @@ ignore
 .vscode
 package-lock.json
 Unused
+jekyll
 
 #glitch.css
 Start.bat

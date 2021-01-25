@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Revamped';
-    src: url('Revamped-X3q1a.ttf');
+    src: url('../resources/fonts/Revamped-X3q1a.ttf');
 }
 .glow-on-hover {
     color: rgb(39, 187, 113);

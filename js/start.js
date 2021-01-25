@@ -44,6 +44,6 @@ function start() {
     document.head.appendChild(link);
 
     // import('./timer.js');
-    include('timer.js');
+    include('js/timer.js');
     app.initialize();
 }
