@@ -1,12 +1,10 @@
 const canvas = document.getElementById("canvas");
 /** @type {CanvasRenderingContext2D} */
-const context = canvas.getContext('2d');
-const ctx = context;
+export const context = canvas.getContext('2d');
 let center;
 
 resize();
-window.addEventListener('resize', resize, false);
-
+window.addEventListener('resize', resize, { passive: true });
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -14,50 +12,58 @@ function resize() {
     if (app) app.onResize();
 }
 
+export const init = () => app = new WormBlackHole;
+
+const MAX_NUM = 100;
+const N = 80;
+const w = 0.5;
+
+function createGradient(ctx) {
+    const gradient = ctx.createRadialGradient(
+        center.x, center.y, center.x / 2,
+        center.x, center.y, center.x);
+
+    gradient.addColorStop(0, 'red');
+    gradient.addColorStop(1, 'blue');
+
+    return gradient;
+}
+
 // Draw Worm
 // Ported from flash demo - http://wonderfl.net/c/9os2
-//
-function DrawWorm() {
-    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const vms = [];
-    let interval;
+class WormBlackHole {
+    mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    vms = [];
 
-    this.color = '#4093ff';
-    this.radius = center.y;
-    this.radius2 = center.x;
-    this.rate = Math.PI / 200;
-    this.stop = false;
+    color = createGradient(context);// '#4093ff';
+    radius = center.y;
+    radius2 = center.x;
+    rate = Math.PI / 200;
+    stop = false;
 
-    this.onResize = function() {
+    px = window.innerWidth / 2;
+    py = window.innerHeight;
+    theta = 0;
+
+    onResize() {
         this.radius = center.y;
         this.radius2 = center.x;
     }
 
-    const MAX_NUM = 100;
-    const N = 80;
-    const w = 0.5;
+    constructor() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        window.requestAnimationFrame(this.Draw.bind(this));
 
-    let px = window.innerWidth / 2;
-    let py = window.innerHeight;
-    let theta = 0;
-
-    this.initialize = function() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        canvas.addEventListener('touchmove', TouchMove, false);
-        // canvas.addEventListener('mousemove', MouseMove, false);
-        // canvas.addEventListener('click', MouseDown, false);
-
-        //Set interval - Bad! - I know!
-        interval = setInterval(Draw, 20);
+        // Not worth the elliptic gradient. We get a ridiculous quality degradation.
+        // context.scale(1, 0.5);
+        // context.translate(0, center.y);
     }
 
-    this.prepareStop = function() {
+    prepareStop() {
         this.stop = true;
-        setTimeout(() => clearInterval(interval), 5000);
     }
 
-    function makeNewPosition() {
+    makeNewPosition() {
         const height = canvas.height;
         const width = canvas.width;
         const newX = Math.floor(Math.random() * width);
@@ -65,7 +71,7 @@ function DrawWorm() {
         return [newX, newY];
     }
 
-    function velocity(prev, next) {
+    velocity(prev, next) {
         const x = Math.abs(prev[1] - next[1]);
         const y = Math.abs(prev[0] - next[0]);
         const max = x > y ? x : y;
@@ -73,36 +79,39 @@ function DrawWorm() {
         return Math.ceil(max / speedModifier);
     }
 
-    var Draw = function() {
-        let len = vms.length;
+    Draw() {
+        let len = this.vms.length;
         // const pos = makeNewPosition();
         // const speed = velocity(pos[0], pos[1]);
-        if (!app.stop) {
-            mouse.y = center.y + (app.radius * Math.sin(theta));
-            mouse.x = center.x + (app.radius2 * Math.cos(theta));
-            theta += app.rate;
+        if (!this.stop) {
+            // TODO maybe something like Necro Vision main menu chain spread?
+            // this.mouse.y = Math.random() * center.y;
+            // this.mouse.x = Math.random() * center.x;
+            this.mouse.y = center.y + (this.radius * Math.sin(this.theta));
+            this.mouse.x = center.x + (this.radius2 * Math.cos(this.theta));
+            this.theta += this.rate;
         }
-        // fadeScreen();
 
         for (let i = 0; i < len; i++) {
-            var o = vms[i];
+            const o = this.vms[i];
 
             if (o.count < N) {
-                DrawWorm(o);
+                this.DrawWorm(o);
                 o.count++;
                 //This looks a tad hacky - modifying the loop from within :S
             } else {
                 len--;
-                vms.splice(i, 1);
+                this.vms.splice(i, 1);
                 i--;
             }
         }
 
-        Check();
+        this.Check();
+        if (!this.stop) window.requestAnimationFrame(this.Draw.bind(this));
     }
 
     //Takes a worm (obj) param
-    var DrawWorm = function(obj) {
+    DrawWorm(obj) {
         if (Math.random() > 0.9) {
             obj.tmt.rotate(-obj.r * 2);
             obj.r *= -1;
@@ -112,19 +121,19 @@ function DrawWorm() {
 
         obj.vmt.prependMatrix(obj.tmt);
 
-        var cc1x = -obj.w * obj.vmt.c + obj.vmt.tx;
-        var cc1y = -obj.w * obj.vmt.d + obj.vmt.ty;
+        const cc1x = -obj.w * obj.vmt.c + obj.vmt.tx;
+        const cc1y = -obj.w * obj.vmt.d + obj.vmt.ty;
 
-        var pp1x = (obj.c1x + cc1x) / 2;
-        var pp1y = (obj.c1y + cc1y) / 2;
+        const pp1x = (obj.c1x + cc1x) / 2;
+        const pp1y = (obj.c1y + cc1y) / 2;
 
-        var cc2x = obj.w * obj.vmt.c + obj.vmt.tx;
-        var cc2y = obj.w * obj.vmt.d + obj.vmt.ty;
+        const cc2x = obj.w * obj.vmt.c + obj.vmt.tx;
+        const cc2y = obj.w * obj.vmt.d + obj.vmt.ty;
 
-        var pp2x = (obj.c2x + cc2x) / 2;
-        var pp2y = (obj.c2y + cc2y) / 2;
+        const pp2x = (obj.c2x + cc2x) / 2;
+        const pp2y = (obj.c2y + cc2y) / 2;
 
-        context.fillStyle = app.color;
+        context.fillStyle = this.color;
         // context.strokeStyle = 'light-red';
         context.beginPath();
 
@@ -149,21 +158,21 @@ function DrawWorm() {
         obj.p2y = pp2y;
     }
 
-    var Check = function() {
-        var x0 = mouse.x;
-        var y0 = mouse.y;
+    Check() {
+        const x0 = this.mouse.x;
+        const y0 = this.mouse.y;
 
-        var vx = x0 - px;
-        var vy = y0 - py;
+        const vx = x0 - this.px;
+        const vy = y0 - this.py;
 
-        var len = Math.min(Magnitude(vx, vy), 50);
+        const len = Math.min(this.Magnitude(vx, vy), 50);
 
         if (len < 10) return;
 
-        var matrix = new Matrix2D();
+        const matrix = new Matrix2D();
         matrix.rotate((Math.atan2(vy, vx)));
         matrix.translate(x0, y0);
-        createWorm(matrix, len);
+        this.createWorm(matrix, len);
 
         // context.strokeStyle = 'red';
         // context.beginPath();
@@ -172,13 +181,13 @@ function DrawWorm() {
         // context.stroke();
         // context.closePath();
 
-        px = x0;
-        py = y0;
+        this.px = x0;
+        this.py = y0;
 
         //More logic here for afterwards?
     }
 
-    var createWorm = function(mtx, len) {
+    createWorm(mtx, len) {
         let angle = Math.random() * (Math.PI / 6 - Math.PI / 64) + Math.PI / 64;
         if (Math.random() > 0.5) angle *= -1;
 
@@ -187,7 +196,7 @@ function DrawWorm() {
         tmt.rotate(angle);
         tmt.translate(len, 0);
 
-        const obj = new Worm();
+        const obj = {};
 
         obj.c1x = (-w * mtx.c + mtx.tx);
         obj.p1x = (-w * mtx.c + mtx.tx);
@@ -208,33 +217,14 @@ function DrawWorm() {
         obj.w = len / 20;
         obj.count = 0;
 
-        vms.push(obj);
+        this.vms.push(obj);
 
-        if (vms.length > MAX_NUM) {
-            vms.shift();
+        if (this.vms.length > MAX_NUM) {
+            this.vms.shift();
         }
     }
 
-    //Not sure why they do this kinda thing in flash.
-    var Worm = function() {
-        this.c1x = null;
-        this.c1y = null;
-        this.c2x = null;
-        this.c2y = null;
-        this.p1x = null;
-        this.p1y = null;
-        this.p2x = null;
-        this.p2y = null;
-
-        this.w = null;
-        this.r = null;
-
-        this.count = null;
-        this.vmt = null;
-        this.tmt = null;
-    }
-
-    var fadeScreen = function() {
+    fadeScreen() {
         context.fillStyle = 'rgba(255, 255, 255, 0.02)';
         context.beginPath();
         context.rect(0, 0, window.innerWidth, window.innerHeight);
@@ -242,31 +232,24 @@ function DrawWorm() {
         context.fill();
     }
 
-    //Clear the screen, 
-    var MouseDown = function(e) {
-        e.preventDefault();
-        canvas.width = canvas.width;
-        vms = [];
+    MouseMove(e) {
+        this.mouse.x = e.layerX - canvas.offsetLeft;
+        this.mouse.y = e.layerY - canvas.offsetTop;
     }
 
-    var MouseMove = function(e) {
-        mouse.x = e.layerX - canvas.offsetLeft;
-        mouse.y = e.layerY - canvas.offsetTop;
-    }
-
-    var TouchMove = function(e) {
+    TouchMove(e) {
         e.preventDefault();
-        mouse.x = e.targetTouches[0].pageX - canvas.offsetLeft;
-        mouse.y = e.targetTouches[0].pageY - canvas.offsetTop;
+        this.mouse.x = e.targetTouches[0].pageX - canvas.offsetLeft;
+        this.mouse.y = e.targetTouches[0].pageY - canvas.offsetTop;
     }
 
     //Returns Magnitude
-    var Magnitude = function(x, y) {
+    Magnitude(x, y) {
         return Math.sqrt((x * x) + (y * y));
     }
-
 }
 
+// Trigger warning ahead.
 //Hacked up matrix, borrowed from easel.js -- thanks grant!
 //
 // -- If you are forking this, then you will want to play with the code above this line.
@@ -523,4 +506,5 @@ function DrawWorm() {
     window.Matrix2D = Matrix2D;
 }(window));
 
-var app = new DrawWorm();
+// Please don't tell the internet police that I'm using var.
+export var app;

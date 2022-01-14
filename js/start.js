@@ -1,49 +1,57 @@
+import { audios } from './audiomanager.js';
+import { ball, onCounterStart } from './nano.js';
+import { init } from './canvas.js';
+import { fadeAudio } from './utils.js';
+
 /** @type {Element} */
-let startButton;
+const startButton = document.getElementById('start');
 let startButtonHover = false;
+const fadeListener = { startButtonAmbient: null };
 
-window.onload = () => {
-    startButton = document.getElementById('start');
-    startButton.onmouseenter = () => {
-        ball.enhanced = true;
-        startButtonAmbient.play();
+startButton.onmouseenter = () => {
+    if (fadeListener.startButtonAmbient) {
+        clearInterval(fadeListener.startButtonAmbient);
+        fadeAudio(audios.startButtonAmbient, 1.0, 1_000, interval => fadeListener.startButtonAmbient = interval);
     }
-    startButton.onmouseleave = () => {
-            ball.enhanced = false;
-            startButtonAmbient.pause();
-            startButtonAmbient.currentTime = 0;
-        }
-        // window.addEventListener('mousemove', (e) => {
-        //     const x = -e.offsetX + "deg";
-        //     const y = -e.offsetY + "deg";
-        //     const boundings = startButton.getBoundingClientRect();
-        //     const boxCenter = [boundings.left + boundings.width / 2, boundings.top + boundings.height / 2];
-        //     const angle = Math.atan2(e.pageX - boxCenter[0], -(e.pageY - boxCenter[1])) * (180 / Math.PI);
-        //     startButton.style.transform = "rotate(" + angle + "deg" + ')';
-        //     startButton.style.mozTransform = x + ',' + y;
-        //     startButton.style.webkitTransform = x + ',' + y;
-        // });
-    startAudio.loop = true;
-    startAudio.play();
+    ball.enhanced = true;
+    audios.startButtonAmbient.currentTime = 0;
+    audios.startButtonAmbient.play();
 }
+startButton.onmouseleave = () => {
+    ball.enhanced = false;
+    fadeAudio(audios.startButtonAmbient, 0, 2_000, interval => fadeListener.startButtonAmbient = interval).then(() => {
+        audios.startButtonAmbient.pause();
+        audios.startButtonAmbient.volume = 1.0;
+        fadeListener.startButtonAmbient = null;
+    });
+}
+audios.startAudio.loop = true;
+audios.startAudio.play().catch(x => {
+    if ((x.name ?? x) === 'NotAllowedError') {
+        console.error("%cFUCK YOU. ENABLE AUTO AUTOPLAY FOR AUDIOS", 
+           "color: red; background: black; font-family: revamped; font-size: xxx-large;" + 
+            "cursor: url(resources/images/middlefinger.cur), grabbing");
+            //window.location.href = '404.html';
+    }
+});
 
-function start() {
+document.getElementById('start').addEventListener('click', () => {
+    const { startAudio, startButtonAmbient, startButtonSound } = audios;
+
     startButton.remove();
     startAudio.remove();
     startAudio.pause();
     startButtonAmbient.pause();
     startButtonAmbient.remove();
     startButtonSound.play();
-    started = false;
+    onCounterStart();
 
     // Change PNG Icon to Gif
-    const link = document.querySelector("link[rel*='icon']"); // || document.createElement('link');
-    link.type = 'image/gif';
-    link.rel = 'icon';
-    link.href = 'favicon.gif';
-    document.head.appendChild(link);
+    Object.assign(document.head.querySelector("link[rel*='icon']"), {
+        type: 'image/gif',
+        rel: 'icon',
+        href: 'resources/images/favicon.gif'
+    });
 
-    // import('./timer.js');
-    include('js/timer.js');
-    app.initialize();
-}
+    import('./timer.js').then(() => init());
+}, { passive: true });

@@ -1,5 +1,8 @@
-let started = true;
-let ball = {
+import { random, randomArrayItem, randomHexColor, distance, addAlpha, hexToRgbWithAlpha } from './utils.js';
+import { characterList } from './mouse.js';
+import { context as ctx } from './canvas.js';
+
+export let ball = {
         x: 0,
         y: 0,
         vx: 0,
@@ -8,8 +11,8 @@ let ball = {
         enhanced: false,
         alpha: 1,
         limit: optimalBallLimit()
-    },
-    ball_color = {
+    };
+let ball_color = {
         r: 0,
         g: 100,
         b: 200
@@ -30,8 +33,8 @@ let ball = {
         }
     },
 
-    dis_limit = 260,
-    distBorderLimit = dis_limit / 2,
+    nodeLinkingDistance = 250, mouseNodeLinkingDistance = 400,
+    distBorderLimit = nodeLinkingDistance / 2,
     mouse_ball = {
         x: 0,
         y: 0,
@@ -44,8 +47,7 @@ let ball = {
     };
 
 function getRandomSpeed(pos) {
-    const min = -1,
-        max = 1;
+    const min = -1, max = 1;
     switch (pos) {
         case 'top':
             return [random(min, max), random(0.1, max)];
@@ -60,34 +62,36 @@ function getRandomSpeed(pos) {
 
 function getRandomBall() {
     const pos = randomArrayItem(['top', 'right', 'bottom', 'left']);
+    let speeds = getRandomSpeed(pos);
+    speeds = {
+        vx: speeds[0],
+        vy: speeds[1],
+    }
+
     switch (pos) {
         case 'top':
             return {
                 x: randomSidePos(canvas.width),
                 y: -R,
-                vx: getRandomSpeed('top')[0],
-                vy: getRandomSpeed('top')[1],
+                ...speeds
             }
         case 'right':
             return {
                 x: canvas.width + R,
                 y: randomSidePos(canvas.height),
-                vx: getRandomSpeed('right')[0],
-                vy: getRandomSpeed('right')[1],
+                ...speeds
             }
         case 'bottom':
             return {
                 x: randomSidePos(canvas.width),
                 y: canvas.height + R,
-                vx: getRandomSpeed('bottom')[0],
-                vy: getRandomSpeed('bottom')[1],
+                ...speeds
             }
         case 'left':
             return {
                 x: -R,
                 y: randomSidePos(canvas.height),
-                vx: getRandomSpeed('left')[0],
-                vy: getRandomSpeed('left')[1],
+                ...speeds
             }
     }
 }
@@ -115,7 +119,10 @@ function renderBalls() {
 }
 
 function isInFrame(b) {
-    return b.x > -distBorderLimit && b.x < (canvas.width + distBorderLimit) && b.y > -distBorderLimit && b.y < (canvas.height + distBorderLimit)
+    return b.x > -distBorderLimit && 
+        b.x < (canvas.width + distBorderLimit) && 
+        b.y > -distBorderLimit && 
+        b.y < (canvas.height + distBorderLimit);
 }
 
 function updateBalls() {
@@ -150,6 +157,7 @@ function updateBalls() {
     balls = newBalls.slice(0);
 }
 
+// Render the line linking surrounding balls and the mouse.
 function renderLines() {
     const len = balls.length;
     for (let i = 0; i < len; i++) {
@@ -159,7 +167,7 @@ function renderLines() {
             const isFirstMouse = first.hasOwnProperty('type'),
                 isSecondMouse = second.hasOwnProperty('type'),
                 isMouse = isFirstMouse || isSecondMouse;
-            const fraction = distance(first, second) / dis_limit;
+            const fraction = distance(first, second) / (isMouse ? mouseNodeLinkingDistance : nodeLinkingDistance);
 
             if (fraction < 1) {
                 const alpha = 1 - fraction;
@@ -203,13 +211,13 @@ function ensureBallCount() {
 
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (started) {
-        renderLines();
-        renderBalls();
-        updateBalls();
-        ensureBallCount();
-        window.requestAnimationFrame(render);
-    }
+    if (render.stop) return;
+
+    renderLines();
+    renderBalls();
+    updateBalls();
+    ensureBallCount();
+    window.requestAnimationFrame(render);
 }
 
 function initBalls(num) {
@@ -237,18 +245,32 @@ function optimalBallLimit() {
 }
 
 // Mouse Events
-window.addEventListener('mouseover', () => { if (started) balls.push(mouse_ball) }, false);
-window.addEventListener('mouseout', function() {
-    if (!started) return;
+const mouseOver = () => balls.push(mouse_ball);
+const onResize = () => ball.limit = optimalBallLimit();
+const mouseOut = () => {
     const newBalls = [];
     for (const b of balls) {
         if (!b.hasOwnProperty('type')) newBalls.push(b);
     }
     balls = newBalls.slice(0);
-}, false);
-window.addEventListener('resize', () => ball.limit = optimalBallLimit());
-window.addEventListener('mousemove', function(e) {
-    if (!started) return;
+}
+const mouseMove = (e) => {
     mouse_ball.x = e.x;
     mouse_ball.y = e.y;
-});
+}
+
+window.addEventListener('mouseover', mouseOver, { passive: true });
+window.addEventListener('mouseout', mouseOut, { passive: true });
+window.addEventListener('mousemove', mouseMove, { passive: true });
+window.addEventListener('resize', onResize, { passive: true });
+
+export function onCounterStart() {
+    if (onCounterStart.executed) throw new Error('Cannot execute onCounterStart twice.');
+    onCounterStart.executed = true;
+
+    render.stop = true;
+    window.removeEventListener('mouseover', mouseOver);
+    window.removeEventListener('mouseout', mouseOut);
+    window.removeEventListener('mousemove', mouseMove);
+    window.removeEventListener('resize', onResize);
+}

@@ -1,23 +1,51 @@
-function randomArrayItem(arr) {
+export function randomArrayItem(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function random(min, max) {
+export function random(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-function randInt(min, max) {
+export function randInt(min, max) {
     return Math.floor(random(min, max));
 }
 
-function distance(a, b) {
+export function distance(a, b) {
     const delta_x = Math.abs(a.x - b.x),
         delta_y = Math.abs(a.y - b.y);
     return Math.sqrt(delta_x * delta_x + delta_y * delta_y);
 }
 
-function randomHexColor() {
+export function randomHexColor() {
     return "#" + ((1 << 24) * Math.random() | 0).toString(16);
+}
+
+export function fadeAudio(audio, newVolume, duration, listener) {
+    const durationInterval = 15;
+    const descending = audio.volume > newVolume;
+    const diff = descending ? (audio.volume - newVolume) : (newVolume - audio.volume);
+    const accumulator = diff / (duration / durationInterval);
+    // from 0 to 5 in 10 seconds
+    // accumulator? 0.5 * 10 = 5 -> x * 10 = 5 -> x = 5 / 10 
+    // accumulator = steps / duration
+    
+    return new Promise(resolve => {
+        // const perf = performance.now();
+        const interval = setInterval(() => {
+            let finalVolume = audio.volume;
+            if (descending) finalVolume = Math.max(finalVolume - accumulator, 0);
+            else finalVolume = Math.min(finalVolume + accumulator, 1.0);
+
+            audio.volume = finalVolume;
+
+            if (descending ? (finalVolume <= newVolume) : (finalVolume >= newVolume)) {
+                // console.log("DONE with " + (performance.now() - perf))
+                clearInterval(interval);
+                return resolve();
+            }
+        }, durationInterval);
+        listener(interval);
+    });
 }
 
 /**
@@ -25,7 +53,7 @@ function randomHexColor() {
  * @param {string} hex
  * @returns {string}
  */
-function hexToRgba(hex) {
+export function hexToRgba(hex) {
     var bigint = parseInt(hex.charAt(0) == '#' ? hex.slice(1) : hex, 16);
     var r = ((bigint >> 24) & 255);
     var g = (bigint >> 16) & 255;
@@ -41,7 +69,7 @@ function hexToRgba(hex) {
  * @param {number} alpha
  * @returns {string}
  */
-function hexToRgbWithAlpha(hex, a) {
+export function hexToRgbWithAlpha(hex, a) {
     var bigint = parseInt(hex.charAt(0) == '#' ? hex.slice(1) : hex, 16);
     var r = (bigint >> 16) & 255;
     var g = (bigint >> 8) & 255;
@@ -55,7 +83,7 @@ function hexToRgbWithAlpha(hex, a) {
  * @param {number} alpha
  * @returns {string} in the format of <hex>aa most commonly "#rrggbbaa"
  */
-function addAlpha(hex, alpha) {
+export function addAlpha(hex, alpha) {
     let alphaHex = Math.round(alpha * 255).toString(16);
     if (alphaHex.length == 1) alphaHex = '0' + alphaHex;
     return hex + alphaHex;
@@ -64,7 +92,7 @@ function addAlpha(hex, alpha) {
 /**
  * @param {File} file 
  */
-function include(file) {
+export function include(file) {
     const script = document.createElement('script');
     script.src = file;
     script.type = 'text/javascript';
@@ -80,7 +108,7 @@ function include(file) {
  * @param {function handle(r, g, b, a)} handle 
  * @param {number} duration The duration of the animation in milliseconds.
  */
-function gradientQuantumTransition(oldRGB, newRGB, handle, duration) {
+export function gradientQuantumTransition(oldRGB, newRGB, handle, duration) {
     // if (duration < 10) duration = 10;
 
     let r = oldRGB[0],
@@ -117,15 +145,15 @@ function gradientQuantumTransition(oldRGB, newRGB, handle, duration) {
  * @param {function handle(r, g, b, a)} handle 
  * @param {number} speed
  */
-function gradientTransition(oldRGB, newRGB, handle, speed = 1) {
+export function gradientTransition(oldRGB, newRGB, handle, speed = 1) {
     let r = oldRGB[0],
         g = oldRGB[1],
         b = oldRGB[2],
-        a = oldRGB[3];
+        a = oldRGB[3] ?? 1;
     const newR = newRGB[0],
         newG = newRGB[1],
         newB = newRGB[2],
-        newA = newRGB[3];
+        newA = newRGB[3] ?? 1;
 
     let max = 0;
     for (let i = 0; i < 4; i++) {
@@ -140,6 +168,7 @@ function gradientTransition(oldRGB, newRGB, handle, speed = 1) {
         gAscending = g < newG,
         bAscending = b < newB,
         aAscending = a < newA;
+
     const rModifier = rAscending ? 1 : -1;
     const gModifier = gAscending ? 1 : -1;
     const bModifier = bAscending ? 1 : -1;

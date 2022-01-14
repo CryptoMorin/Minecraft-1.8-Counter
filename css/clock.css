@@ -3,10 +3,7 @@
  * Digit: Created from 7 segments.
  * Separator: The dot between 2 paired digits.
  */
-
-
-/* @import "./childprocessor.css"; */
-
+ 
 .clock {
     height: 200px;
     width: 1000px;

@@ -1,28 +1,30 @@
-let audioStopped = false;
+import { context } from './canvas.js';
 
-const startPath = "resources/audios/";
-const startAudio = new Audio(startPath + 'Genshin.mp3');
-const startButtonSound = new Audio(startPath + 'startclick.ogg');
-const startButtonAmbient = new Audio(startPath + 'start.ogg');
-const countDownSound = new Audio(startPath + 'countdown.mp3');
-const oFortuna = new Audio(startPath + 'OFortuna.mp3');
-
-const audioButton = document.getElementById('audio');
-window.addEventListener('load', () => drawAudioButton);
-startButtonAmbient.onended = () => {
-    startButtonAmbient.currentTime = 0;
-    startButtonAmbient.play();
+export const audios = {
+    startAudio: getAudio('Genshin.mp3'),
+    startButtonSound: getAudio('startclick.ogg'),
+    startButtonAmbient: getAudio('start.ogg'),
+    countDownSound: getAudio('countdown.mp3'),
+    oFortuna: getAudio('OFortuna.mp3')
 }
+
+function getAudio(name) {
+    return new Audio("resources/audios/" + name);
+}
+
+audios.startButtonAmbient.loop = true;
+export let audioStopped = false;
+//const audioButton = document.getElementById('audio');
 
 function onAudioButton() {
     if (audioStopped) startAudio();
     else stopAudio();
 }
 
-function stopAudio() {
-    startAudio.pause();
-    oFortuna.pause();
-    oFortuna.currentTime = 0;
+export function stopAudio() {
+    audios.startAudio.pause();
+    audios.oFortuna.pause();
+    audios.oFortuna.currentTime = 0;
 }
 
 function drawAudioButton() {
@@ -30,9 +32,4 @@ function drawAudioButton() {
     context.ellipse(100, 75, 50, 70, 0, 0, Math.PI * 2);
     context.fillStyle = 'red';
     context.fill();
-}
-
-function start() {
-    if (started) oFortuna.play();
-    else startAudio.play();
 }

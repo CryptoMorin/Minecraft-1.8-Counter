@@ -1,18 +1,30 @@
+import { audios, audioStopped } from './audiomanager.js';
+import { app } from './canvas.js';
+import { gradientTransition } from './utils.js';
+
 // https://minecraft.gamepedia.com/Java_Edition_1.8.8
-const oneEightRelease = new Date('July 27, 2015');
-if (!audioStopped) oFortuna.play();
+// https://twitter.com/Dinnerbone/status/626070306613018624
+const oneEightRelease = new Date('July 27, 2015, 9:42 AM');
+if (!audioStopped) audios.oFortuna.play();
+
+function getCurrentGradientColor() {
+    const regex = /rgb\((\d+), (\d+), (\d+)/;
+    const results = window.getComputedStyle(document.body).backgroundImage.match(regex);
+    return results.slice(1).map(x => +x);
+}
 
 setTimeout(() => {
-    countDownSound.loop = true;
-    countDownSound.volume = 0.3;
-    countDownSound.play();
+    audios.countDownSound.loop = true;
+    audios.countDownSound.volume = 0.3;
+    audios.countDownSound.play();
     setTimeout(() => {
             app.color = 'black';
             app.rate = Math.PI / 100;
-            const oldRGB = [40, 45, 112, 1];
-            const newRGB = [180, 0, 0, 0.01];
-            gradientTransition(oldRGB, newRGB, (r, g, b) => document.body.style.background = `radial-gradient(rgb(${r},${g},${b}),#000000)`);
-        }, 1000 * 94) // 1:36 - 2 for the sake of the delay.
+            const oldRGB = getCurrentGradientColor();
+            const newRGB = [180, 0, 0, 1];
+            gradientTransition(oldRGB, newRGB, 
+                (r, g, b) => document.body.style.background = `radial-gradient(rgb(${r},${g},${b}), black)`);
+    }, 1000 * 94) // 1:36 - 2 for the sake of the delay.
     setTimeout(() => {
         app.rate = Math.PI / 50;
         let time = 3000 / 20;
@@ -149,7 +161,7 @@ setInterval(function() {
 
     // setNumber(days[0], Math.floor(d / 10));
     // setNumber(days[1], d % 10);
-    dateDiv.innerHTML = years + " Years - " + months + " Months - " + d + " Days";
+    dateDiv.textContent = years + " Years - " + months + " Months - " + d + " Days";
 
     setNumber(hours[0], Math.floor(hrs / 10));
     setNumber(hours[1], hrs % 10);
@@ -162,11 +174,10 @@ setInterval(function() {
 
     ms = Math.floor(ms / 10); // Round to 0-100
     if (ms < 10) ms = '0' + ms;
-    milliSecs[0].innerHTML = ms;
+    milliSecs[0].textContent = ms;
     // setNumber(milliSecs[0], Math.floor(ms / 10));
     // setNumber(milliSecs[1], ms % 10);
 }, 10);
-// });
 
 function setNumber(digit, number) {
     const segments = digit.querySelectorAll('.segment');

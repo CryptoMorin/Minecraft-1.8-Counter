@@ -1,3 +1,4 @@
+// Unused
 // Only add setZeroTimeout to the window object, and hide everything
 // else in a closure.
 (function() {
@@ -27,7 +28,7 @@
         }
     }
 
-    window.addEventListener("message", handleMessage, true);
+    window.addEventListener("message", handleMessage);
 
     // Add the one thing we want added to the window object.
     window.setZeroTimeout = setZeroTimeout;

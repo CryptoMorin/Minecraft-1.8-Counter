@@ -7,7 +7,7 @@ document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     contextMenu = e;
     drawContextMenu();
-}, false);
+});
 
 function drawContextMenu() {
     contextMenDiv.style.display = 'inherit';
@@ -17,19 +17,23 @@ function drawContextMenu() {
     if (y + contextMenDiv.offsetHeight > window.innerHeight) y -= contextMenDiv.offsetHeight;
     contextMenDiv.style.left = x + 'px';
     contextMenDiv.style.top = y + 'px';
-
-    // const blob = document.createElement("div");
-    // blob.className = "rightClickEffect";
-    // blob.style.top = (y + (contextMenDiv.offsetHeight / 2)) + "px";
-    // blob.style.left = (x + (contextMenDiv.offsetWidth / 2)) + "px";
-
-    // document.body.appendChild(blob);
-    // blob.onanimationend = () => blob.remove();
 }
 
-const characterList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+function charRange(start, end) {
+    start = start.charCodeAt(0);
+    end = end.charCodeAt(0);
+
+    if (start >= end) throw new Error(`Cant get char range of: ${start}-${end}`);
+    
+    return Array.from({ length: (end - start) }, 
+        (_, index) => String.fromCharCode(start + index));
+}
+export const characterList = [
+    ...charRange('0', '9'),
+    ...charRange('a', 'z'),
+    ...charRange('A', 'Z'),
 ];
+
 const layers = {
     n: 5, //number of layers
     letters: [100, 40, 30, 20, 10], //letters per layer (starting from the deepest layer)
@@ -39,15 +43,15 @@ const layers = {
 };
 
 const characters = [];
-let mouse = {
+const mouse = {
     x: 0,
     y: 0
 }
 
-window.addEventListener('mousemove', function(e) {
+window.addEventListener('mousemove', (e) => {
     mouse.x = e.x;
     mouse.y = e.y;
-});
+}, { passive: true });
 
 function drawLetter(char) {
     msCtx.font = char.size + 'px ' + layers.font;
@@ -88,7 +92,7 @@ function createLetters() {
     }
 }
 
-document.addEventListener('click', function(e) {
+document.addEventListener('click', (e) => {
     const blob = document.createElement("div");
     blob.className = "clickEffect";
     blob.style.top = e.clientY + "px";
@@ -97,4 +101,4 @@ document.addEventListener('click', function(e) {
     document.body.appendChild(blob);
     blob.onanimationend = () => blob.remove();
     contextMenDiv.style.display = 'none';
-});
+}, { passive: true });
