@@ -3,6 +3,8 @@ const canvas = document.getElementById("canvas");
 export const context = canvas.getContext('2d');
 let center;
 
+console.log("Hello, there's nothing here. Hopefully.")
+
 resize();
 window.addEventListener('resize', resize, { passive: true });
 function resize() {

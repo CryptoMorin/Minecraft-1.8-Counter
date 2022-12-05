@@ -1,0 +1,7 @@
+If you want to test this locally:
+   Firefox: about:config -> security.fileuri.strict_origin_policy -> false
+   Chrome: Fuck you
+   Edge: What are you doing with your life?
+   Internet Explorer: Get help at https://www.mentalhealth.org.uk/explore-mental-health/get-help
+   Netscape: Chad
+   Nexus: You sir, are unstoppable. Even by CORS because this shit didn't exist back then.
