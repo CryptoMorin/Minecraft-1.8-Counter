@@ -9,15 +9,52 @@ document.addEventListener('contextmenu', function(e) {
     drawContextMenu();
 });
 
+function disableContextMenu() {
+    contextMenDiv.classList.remove('enabled');
+    contextMenDiv.classList.add('disable');
+}
+
 function drawContextMenu() {
     contextMenDiv.style.display = 'inherit';
-    let x = contextMenu.x,
-        y = contextMenu.y;
-    if (x + contextMenDiv.offsetWidth > window.innerWidth) x -= contextMenDiv.offsetWidth;
-    if (y + contextMenDiv.offsetHeight > window.innerHeight) y -= contextMenDiv.offsetHeight;
-    contextMenDiv.style.left = x + 'px';
-    contextMenDiv.style.top = y + 'px';
+
+    function reposition() {
+        let { x, y } = contextMenu;
+        if (x + contextMenDiv.offsetWidth > window.innerWidth) x -= contextMenDiv.offsetWidth;
+        if (y + contextMenDiv.offsetHeight > window.innerHeight) y -= contextMenDiv.offsetHeight;
+        contextMenDiv.style.left = x + 'px';
+        contextMenDiv.style.top = y + 'px';
+    }
+
+    function enable() {
+        contextMenDiv.classList.remove('disable');
+        contextMenDiv.classList.add('enabled');
+    }
+
+    if (contextMenDiv.classList.contains('enabled')) {
+        disableContextMenu();
+        setTimeout(() => {
+            enable();
+            reposition();
+        }, 200);
+    } else {
+        enable();
+        reposition();
+    }
 }
+
+// On context menu disable.
+document.addEventListener('click', (e) => {
+    const blob = document.createElement("div");
+    blob.className = "clickEffect";
+    blob.style.top = e.clientY + "px";
+    blob.style.left = e.clientX + "px";
+
+    document.body.appendChild(blob);
+    blob.onanimationend = () => blob.remove();
+
+    disableContextMenu();
+    setTimeout(() => contextMenDiv.style.display = 'none', 200);
+}, { passive: true });
 
 function charRange(start, end) {
     start = start.charCodeAt(0);
@@ -91,14 +128,3 @@ function createLetters() {
         }
     }
 }
-
-document.addEventListener('click', (e) => {
-    const blob = document.createElement("div");
-    blob.className = "clickEffect";
-    blob.style.top = e.clientY + "px";
-    blob.style.left = e.clientX + "px";
-
-    document.body.appendChild(blob);
-    blob.onanimationend = () => blob.remove();
-    contextMenDiv.style.display = 'none';
-}, { passive: true });

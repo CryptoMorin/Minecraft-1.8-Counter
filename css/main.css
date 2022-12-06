@@ -23,6 +23,7 @@ canvas {
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    -o-user-select: none;
     user-select: none;
 }
 div.clickEffect {
@@ -59,6 +60,45 @@ div.clickEffect {
     border: 0;
     background-color: green;
 }
+#contextMenu.enabled {
+    animation-delay: 0s;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-name: animate-pop;
+    animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
+  }
+  
+  @keyframes animate-pop {
+    0% {
+      opacity: 0;
+      transform: scale(0.5, 0.5);
+    }
+  
+    100% {
+      opacity: 1;
+      transform: scale(1, 1);
+    }
+}
+#contextMenu.disable {
+    animation-delay: 0s;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-name: animate-hide;
+    animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
+  }
+  
+  @keyframes animate-hide {
+    0% {
+        opacity: 1;
+        transform: scale(1, 1);
+    }
+  
+    100% {
+        opacity: 0;
+        transform: scale(0.5, 0.5);
+    }
+}
+
 @keyframes rightClickEffect {
     0% {
         opacity: 0;
